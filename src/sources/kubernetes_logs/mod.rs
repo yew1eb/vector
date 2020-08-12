@@ -62,6 +62,10 @@ pub struct Config {
 
     /// Specifies the field names for metadata annotation.
     annotation_fields: pod_metadata_annotator::FieldsSpec,
+
+    /// Specifies the label selector to filter `Pod`s with.
+    #[serde(default = "default_label_selector")]
+    label_selector: String,
 }
 
 inventory::submit! {
@@ -141,7 +145,6 @@ impl Source {
         );
 
         let field_selector = format!("spec.nodeName={}", self_node_name);
-        let label_selector = "vector.dev/exclude!=true".to_owned();
 
         let k8s_config = k8s::client::config::Config::in_cluster()?;
         let client = k8s::client::Client::new(k8s_config, resolver)?;
@@ -154,7 +157,7 @@ impl Source {
             auto_partial_merge: config.auto_partial_merge,
             fields_spec: config.annotation_fields.clone(),
             field_selector,
-            label_selector,
+            label_selector: config.label_selector.clone(),
         })
     }
 
@@ -342,4 +345,9 @@ fn create_event(line: Bytes, file: &str) -> Event {
 /// as it should be at the generated config file.
 fn default_self_node_name_env_template() -> String {
     format!("${{{}}}", SELF_NODE_NAME_ENV_KEY.to_owned())
+}
+
+/// This function returns the default value for `label_selector`.
+fn default_label_selector() -> String {
+    "vector.dev/exclude!=true".to_string()
 }
