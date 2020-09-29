@@ -176,6 +176,7 @@ sha-1 = "0.9.1"
 md-5 = "0.9.1"
 hex = "0.4.2"
 chrono-tz = "0.5.3"
+rust_decimal = "1.8.1"
 
 # For WASM
 vector-wasm = { path = "lib/vector-wasm", optional = true }
@@ -184,7 +185,6 @@ lucet-runtime = { git = "https://github.com/bytecodealliance/lucet.git", rev = "
 lucet-wasi = { git = "https://github.com/bytecodealliance/lucet.git", rev = "b1863dacc8c92c11e5434fc8815d9b9a26cfe3db", optional = true }
 anyhow = { version = "1.0.28", optional = true }
 async-stream = "0.2.1"
-
 
 [target.'cfg(windows)'.dependencies]
 schannel = "0.1"

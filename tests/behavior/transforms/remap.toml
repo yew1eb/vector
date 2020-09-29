@@ -543,3 +543,24 @@
       "a[6].equals" = "11881"
       "b.length_eq" = 1
       "b[0].equals" = "bar"
+
+[transforms.remap_function_parse_duration]
+  inputs = []
+  type = "remap"
+  mapping = """
+    .a = parse_duration(.a, "ms")
+    .b = parse_duration("100ms", format = .b)
+  """
+[[tests]]
+  name = "remap_function_parse_duration"
+  [tests.input]
+    insert_at = "remap_function_parse_duration"
+    type = "log"
+    [tests.input.log_fields]
+      a = "2s"
+      b = "s"
+  [[tests.outputs]]
+    extract_from = "remap_function_parse_duration"
+    [[tests.outputs.conditions]]
+      "a.equals" = 2000
+      "b.equals" = 0.1
