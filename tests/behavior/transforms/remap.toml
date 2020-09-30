@@ -568,6 +568,7 @@
       "a.equals" = "d58042e6aa5a335e03ad576c6a9e43b41591bfd2077f72dec9df7930e492055d"
       "b.equals" = "211adce11372368668b582f2a9420a2df7512856ff62f37b124b82d9f505b42f"
 
+<<<<<<< HEAD
 [transforms.remap_function_sha3]
   inputs = []
   type = "remap"
@@ -591,3 +592,22 @@
     [[tests.outputs.conditions]]
       "a.equals" = "4bca2b137edc580fe50a88983ef860ebaca36c857b1f492839d6d7392452a63c82cbebc68e3b70a2a1480b4bb5d437a7cba6ecf9d89f9ff3ccd14cd6146ea7e7"
       "b.equals" = "dbae094156f1bf73d9f442f75eb01e52398eb667cd12ba1dcb95748fc0151880ea260310c1451570d60b37bef8655d01f62280e5e24e70cffe3a55c23c2d7351"
+=======
+[transforms.remap_function_format_number]
+  inputs = []
+  type = "remap"
+  mapping = """
+    .a = format_number(.a, scale = 2, decimal_separator = ",", grouping_separator = ".")
+  """
+[[tests]]
+  name = "remap_function_format_number"
+  [tests.input]
+    insert_at = "remap_function_format_number"
+    type = "log"
+    [tests.input.log_fields]
+      a = 1234.567
+  [[tests.outputs]]
+    extract_from = "remap_function_format_number"
+    [[tests.outputs.conditions]]
+      "a.equals" = "1.234,56"
+>>>>>>> 19ef40323... feat(remap transform): add `format_number` function
