@@ -59,6 +59,8 @@ export AWS_SECRET_ACCESS_KEY ?= "dummy"
 # Set if you are on the CI and actually want the things to happen. (Non-CI users should never set this.)
 export CI ?= false
 
+export SUDO := $(shell command -v sudo 2> /dev/null)
+
 FORMATTING_BEGIN_YELLOW = \033[0;33m
 FORMATTING_BEGIN_BLUE = \033[36m
 FORMATTING_END = \033[0m
@@ -122,7 +124,6 @@ define ENVIRONMENT_EXEC
 			--mount type=volume,source=vector-cargo-cache,target=/root/.cargo \
 			$(ENVIRONMENT_UPSTREAM)
 endef
-
 
 ifeq ($(ENVIRONMENT_AUTOBUILD), true)
 define ENVIRONMENT_PREPARE
@@ -748,7 +749,7 @@ check-component-features: ## Check that all component features are setup properl
 
 .PHONY: check-clippy
 check-clippy: ## Check code with Clippy
-	${MAYBE_ENVIRONMENT_EXEC} cargo clippy --workspace --all-targets --features all-integration-tests -- -D warnings
+	${MAYBE_ENVIRONMENT_EXEC} cargo clippy --workspace --all-targets -- -D warnings
 
 .PHONY: check-fmt
 check-fmt: ## Check that all files are formatted properly
@@ -985,10 +986,10 @@ ifeq (${CI}, true)
 ci-sweep: ## Sweep up the CI to try to get more disk space.
 	@echo "Preparing the CI for build by sweeping up disk space a bit..."
 	df -h
-	sudo apt-get --purge autoremove
-	sudo apt-get clean
-	sudo rm -rf "/opt/*" "/usr/local/*"
-	sudo rm -rf "/usr/local/share/boost" && sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
+	${SUDO} apt-get --purge autoremove
+	${SUDO} apt-get clean
+	${SUDO} rm -rf "/opt/*" "/usr/local/*"
+	${SUDO} rm -rf "/usr/local/share/boost" && ${SUDO} rm -rf "${AGENT_TOOLSDIRECTORY}"
 	docker system prune --force
 	df -h
 endif
