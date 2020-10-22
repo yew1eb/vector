@@ -12,3 +12,5 @@ scripts/package-lock.json
 target
 node_modules
 tests/data/wasm/*/target
+
+Cargo.lock
