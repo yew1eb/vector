@@ -34,7 +34,8 @@ fn main() {
 
     let opts = root_opts.root;
     let sub_command = root_opts.sub_command;
-
+    
+    // TODO 日志配置
     let levels = match std::env::var("LOG").ok() {
         Some(level) => level,
         None => match level {
@@ -64,8 +65,10 @@ fn main() {
         LogFormat::Json => true,
     };
 
+    //TODO 设置trace上报
     trace::init(color, json, levels.as_str());
 
+    //TODO 设置metric上报
     metrics::init().expect("metrics initialization failed");
 
     info!("Log level {:?} is enabled.", level);
@@ -90,6 +93,7 @@ fn main() {
     rt.block_on(async move {
         if let Some(s) = sub_command {
             std::process::exit(match s {
+                //TODO 命令行
                 SubCommand::Validate(v) => validate::validate(&v, color).await,
                 SubCommand::List(l) => list::cmd(&l),
                 SubCommand::Test(t) => unit_test::cmd(&t),
